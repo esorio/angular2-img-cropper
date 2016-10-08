@@ -16,6 +16,10 @@ export interface ICropperSettings {
     allowedFilesRegex?: RegExp;
     rounded: boolean;
     keepAspect: boolean;
+    initialX: number;
+    initialY: number;
+    initialW: number;
+    initialH: number;
 }
 
 export class CropperSettings implements ICropperSettings {
@@ -29,6 +33,11 @@ export class CropperSettings implements ICropperSettings {
     public minWidth: number = 50;
     public minHeight: number = 50;
     public minWithRelativeToResolution: boolean = true;
+
+    public initialX: number;
+    public initialY: number;
+    public initialW: number;
+    public initialH: number;
 
     public responsive: boolean = false;
 
