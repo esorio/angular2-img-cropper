@@ -794,16 +794,6 @@ export class ImageCropper extends ImageCropperModel {
         return bounds;
     }
 
-    public getInitBounds(): Bounds {
-        let bounds: Bounds = new Bounds();
-        bounds.left = 50;
-        bounds.right = bounds.left + this.cropperSettings.width;
-        bounds.top = 50;
-        bounds.bottom = 200;
-        return bounds;
-    }
-
-
     public setBounds(bounds: any) {
 
         let topLeft: CornerMarker;
