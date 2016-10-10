@@ -8,7 +8,7 @@ import { ImageCropperComponent, CropperSettings, Bounds } from '../index';
   <h1>angular2-img-cropper <small>samples</small></h1>
 </div>
 <tabset [pills]="false" >
-    <tab title="Sample 1" [disabled]="false">
+    <tab title="Basic" [disabled]="false">
         <div class="row">
         <div class="col-md-9">
             <h3>source</h3>
@@ -44,7 +44,7 @@ this.cropperSettings1.cropperDrawSettings.strokeWidth = 2;
 </code>
 </pre>
     </tab>
-    <tab title="Sample 2" [disabled]="false">
+    <tab title="Round crop" [disabled]="false">
         <div class="row">
         <div class="col-md-9">
             <h3>source</h3>
@@ -90,7 +90,7 @@ this.cropperSettings2.noFileInput = true;
 </pre>
     </tab>
 
-    <tab title="Sample 3" [disabled]="false">
+    <tab title="Initial crop position" [disabled]="false">
         <div class="row">
         <div class="col-md-9">
             <h3>source</h3>
@@ -106,26 +106,30 @@ this.cropperSettings2.noFileInput = true;
 <h3>settings</h3>
 <pre>
 <code>
-this.cropperSettings2 = new CropperSettings();
-this.cropperSettings2.width = 200;
-this.cropperSettings2.height = 200;
-this.cropperSettings2.keepAspect = false;
+this.cropperSettings3 = new CropperSettings();
+this.cropperSettings3.width = 200;
+this.cropperSettings3.height = 250;
+this.cropperSettings3.keepAspect = false;
 
-this.cropperSettings2.croppedWidth = 200;
-this.cropperSettings2.croppedHeight = 200;
+this.cropperSettings3.croppedWidth = 200;
+this.cropperSettings3.croppedHeight = 250;
 
-this.cropperSettings2.canvasWidth = 500;
-this.cropperSettings2.canvasHeight = 300;
+this.cropperSettings3.canvasWidth = 500;
+this.cropperSettings3.canvasHeight = 300;
 
-this.cropperSettings2.minWidth = 100;
-this.cropperSettings2.minHeight = 100;
+this.cropperSettings3.minWidth = 100;
+this.cropperSettings3.minHeight = 100;
 
-this.cropperSettings2.rounded = true;
-this.cropperSettings2.minWithRelativeToResolution = false;
+this.cropperSettings3.rounded = false;
+this.cropperSettings3.minWithRelativeToResolution = false;
 
-this.cropperSettings2.cropperDrawSettings.strokeColor = 'rgba(255,255,255,1)';
-this.cropperSettings2.cropperDrawSettings.strokeWidth = 2;
-this.cropperSettings2.noFileInput = true;
+this.cropperSettings3.cropperDrawSettings.strokeColor = 'rgba(255,255,255,1)';
+this.cropperSettings3.cropperDrawSettings.strokeWidth = 2;
+
+this.cropperSettings3.initialX = 75;
+this.cropperSettings3.initialY = 75;
+this.cropperSettings3.initialW = 200;
+this.cropperSettings3.initialH = 200;
 </code>
 </pre>
 </tab>
