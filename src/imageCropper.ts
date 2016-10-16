@@ -581,8 +581,8 @@ export class ImageCropper extends ImageCropperModel {
 
     public getCropBounds() {
         let bounds = this.getBounds();
-        bounds.top = Math.round(( bounds.top + this.minYClamp) / this.ratioH);
-        bounds.bottom = Math.round(( bounds.bottom + this.minYClamp) / this.ratioH);
+        bounds.top = Math.round((bounds.top + this.minYClamp) / this.ratioH);
+        bounds.bottom = Math.round((bounds.bottom + this.minYClamp) / this.ratioH);
         bounds.left = Math.round((bounds.left - this.minXClamp) / this.ratioW);
         bounds.right = Math.round((bounds.right - this.minXClamp) / this.ratioW);
         return bounds;
@@ -639,35 +639,22 @@ export class ImageCropper extends ImageCropperModel {
         this.canvasWidth = w;
         this.canvasHeight = h;
 
-        // let tlPos: Point = PointPool.instance.borrow(cX - cropBounds.width / 2, cY + cropBounds.height / 2);
-        // let trPos: Point = PointPool.instance.borrow(cX + cropBounds.width / 2, cY + cropBounds.height / 2);
-        // let blPos: Point = PointPool.instance.borrow(cX - cropBounds.width / 2, cY - cropBounds.height / 2);
-        // let brPos: Point = PointPool.instance.borrow(cX + cropBounds.width / 2, cY - cropBounds.height / 2);
-        // this.tl.setPosition(tlPos.x, tlPos.y);
-        // this.tr.setPosition(trPos.x, trPos.y);
-        // this.bl.setPosition(blPos.x, blPos.y);
-        // this.br.setPosition(brPos.x, brPos.y);
-        // PointPool.instance.returnPoint(tlPos);
-        // PointPool.instance.returnPoint(trPos);
-        // PointPool.instance.returnPoint(blPos);
-        // PointPool.instance.returnPoint(brPos);
-
-        let cropCorners: Point[];
+        let cropPosition: Point[];
         if (this.isInitialAreaConfigured()) {
-            cropCorners = this.setInitialCropArea();
+            cropPosition = this.getInitialCropPosition();
         } else {
-            cropCorners = this.getDefaultCropArea(w, h);
+            cropPosition = this.getDefaultCropPosition(w, h);
         }
 
-        this.tl.setPosition(cropCorners[0].x, cropCorners[0].y);
-        this.tr.setPosition(cropCorners[1].x, cropCorners[1].y);
-        this.bl.setPosition(cropCorners[2].x, cropCorners[2].y);
-        this.br.setPosition(cropCorners[3].x, cropCorners[3].y);
+        this.tl.setPosition(cropPosition[0].x, cropPosition[0].y);
+        this.tr.setPosition(cropPosition[1].x, cropPosition[1].y);
+        this.bl.setPosition(cropPosition[2].x, cropPosition[2].y);
+        this.br.setPosition(cropPosition[3].x, cropPosition[3].y);
+        this.center.setPosition(cropPosition[4].x, cropPosition[4].y);
 
-        PointPool.instance.returnPoint(cropCorners[0]);
-        PointPool.instance.returnPoint(cropCorners[1]);
-        PointPool.instance.returnPoint(cropCorners[2]);
-        PointPool.instance.returnPoint(cropCorners[3]);
+        for (let position of cropPosition) {
+            PointPool.instance.returnPoint(position);
+        }
 
         this.vertSquashRatio = ImageCropper.detectVerticalSquash(this.srcImage);
         this.draw(this.ctx);
@@ -678,8 +665,8 @@ export class ImageCropper extends ImageCropperModel {
         return (this.initialH != null && this.initialW != null && this.initialX != null && this.initialY != null);
     }
 
-    private getDefaultCropArea(w: number, h: number): Point[] {
-        let tlPos: Point, trPos: Point, blPos: Point, brPos: Point;
+    private getDefaultCropPosition(w: number, h: number): Point[] {
+        let tlPos: Point, trPos: Point, blPos: Point, brPos: Point, center: Point;
         let sourceAspect: number = this.srcImage.height / this.srcImage.width;
         let cropBounds: Bounds = this.getBounds();
         let cropAspect: number = cropBounds.height / cropBounds.width;
@@ -702,15 +689,14 @@ export class ImageCropper extends ImageCropperModel {
             brPos = PointPool.instance.borrow(cX + imageW / 2, cY - cropH / 2);
         }
 
-        this.center.setPosition(cX, cY);
-
-        let corners: Point[] = [tlPos, trPos, blPos, brPos];
-        return corners;
+        center = PointPool.instance.borrow(cX, cY);
+        let positions: Point[] = [tlPos, trPos, blPos, brPos, center];
+        return positions;
     }
 
-    private setInitialCropArea(): Point[] {
-        let marginTop: number = 0;
-        let marginLeft: number = 0;
+    private getInitialCropPosition(): Point[] {
+        let marginTop = 0;
+        let marginLeft = 0;
         let canvasAspect: number = this.canvasHeight / this.canvasWidth;
         let sourceAspect: number = this.srcImage.height / this.srcImage.width;
 
@@ -748,10 +734,10 @@ export class ImageCropper extends ImageCropperModel {
         let trPos: Point = PointPool.instance.borrow(actualX + actualW, actualY + actualH);
         let blPos: Point = PointPool.instance.borrow(actualX, actualY);
         let brPos: Point = PointPool.instance.borrow(actualX + actualW, actualY);
+        let center: Point = PointPool.instance.borrow(actualX + actualW / 2, actualY + actualH / 2);
 
-        this.center.setPosition(actualX + actualW / 2, actualY + actualH / 2);
-        let corners: Point[] = [tlPos, trPos, blPos, brPos];
-        return corners;
+        let positions: Point[] = [tlPos, trPos, blPos, brPos, center];
+        return positions;
     }
 
     // todo: Unused parameters?
@@ -918,8 +904,8 @@ export class ImageCropper extends ImageCropperModel {
         }
     }
 
-    public getDragTouchForID(id: any):CropTouch {
-        let currentDragTouch:CropTouch;
+    public getDragTouchForID(id: any): CropTouch {
+        let currentDragTouch: CropTouch;
         for (let i = 0; i < this.currentDragTouches.length; i++) {
             if (id === this.currentDragTouches[i].id) {
                 currentDragTouch = this.currentDragTouches[i];
@@ -1015,8 +1001,8 @@ export class ImageCropper extends ImageCropperModel {
 
     // http://stackoverflow.com/questions/11929099/html5-canvas-drawimage-ratio-bug-ios
     public drawImageIOSFix(ctx: CanvasRenderingContext2D, img: HTMLImageElement | HTMLCanvasElement | HTMLVideoElement,
-                           sx: number, sy: number, sw: number, sh: number, dx: number, dy: number, dw: number,
-                           dh: number) {
+        sx: number, sy: number, sw: number, sh: number, dx: number, dy: number, dw: number,
+        dh: number) {
 
         // Works only if whole image is displayed:
         // ctx.drawImage(img, sx, sy, sw, sh, dx, dy, dw, dh / vertSquashRatio);
