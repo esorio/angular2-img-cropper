@@ -45,5 +45,5 @@ export class ImageCropperModel {
     protected initialX: number;
     protected initialY: number;
     protected initialW: number;
-    protected initialH: number;    
+    protected initialH: number;
 }

@@ -1,5 +1,6 @@
 import {Handle, IHandle} from "./handle";
 import {CropperSettings} from "../cropperSettings";
+import { Point } from 'src/model/point';
 
 export interface ICornerMarker extends IHandle {
     horizontalNeighbour: CornerMarker;
