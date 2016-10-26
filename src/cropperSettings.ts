@@ -35,10 +35,10 @@ export class CropperSettings implements ICropperSettings {
     public minHeight: number = 50;
     public minWithRelativeToResolution: boolean = true;
 
-    public initialX: number;
-    public initialY: number;
-    public initialW: number;
-    public initialH: number;
+    public initialX: number = undefined;
+    public initialY: number = undefined;
+    public initialW: number = undefined;
+    public initialH: number = undefined;
 
     public responsive: boolean = false;
 
