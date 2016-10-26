@@ -23,7 +23,8 @@
         'compiler',
         'core',
         'platform-browser',
-        'platform-browser-dynamic'
+        'platform-browser-dynamic',
+        'forms'
     ];
 
     // add package entries for angular packages in the form '@angular/common': { main: 'index.umd.js', defaultExtension: 'js' }

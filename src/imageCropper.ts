@@ -81,11 +81,6 @@ export class ImageCropper extends ImageCropperModel {
         this.currentlyInteracting = false;
         this.cropWidth = croppedWidth;
         this.cropHeight = croppedHeight;
-
-        this.initialX = cropperSettings.initialX;
-        this.initialY = cropperSettings.initialY;
-        this.initialW = cropperSettings.initialW;
-        this.initialH = cropperSettings.initialH;
     }
 
     private static sign(x: number): number {
@@ -646,6 +641,15 @@ export class ImageCropper extends ImageCropperModel {
             cropPosition = this.getDefaultCropPosition(w, h);
         }
 
+        this.setCropPosition(cropPosition);
+    }
+
+    public updateInitialCropPosition(): void {
+        let cropPosition: Point[] = this.getInitialCropPosition();
+        this.setCropPosition(cropPosition);
+    }
+
+    private setCropPosition(cropPosition: Point[]): void{
         this.tl.setPosition(cropPosition[0].x, cropPosition[0].y);
         this.tr.setPosition(cropPosition[1].x, cropPosition[1].y);
         this.bl.setPosition(cropPosition[2].x, cropPosition[2].y);
@@ -662,7 +666,7 @@ export class ImageCropper extends ImageCropperModel {
     }
 
     private isInitialAreaConfigured(): boolean {
-        return (this.initialH != null && this.initialW != null && this.initialX != null && this.initialY != null);
+        return (this.cropperSettings.initialH != null && this.cropperSettings.initialW != null && this.cropperSettings.initialX != null && this.cropperSettings.initialY != null);
     }
 
     private getDefaultCropPosition(w: number, h: number): Point[] {
@@ -709,16 +713,16 @@ export class ImageCropper extends ImageCropperModel {
         let ratioW: number = (this.canvasWidth - marginLeft * 2) / this.srcImage.width;
         let ratioH: number = (this.canvasHeight - marginTop * 2) / this.srcImage.height;
 
-        let actualH: number = this.initialH * ratioH;
-        let actualW: number = this.initialW * ratioW;
-        let actualX: number = this.initialX * ratioW;
-        let actualY: number = this.initialY * ratioH;
+        let actualH: number = this.cropperSettings.initialH * ratioH;
+        let actualW: number = this.cropperSettings.initialW * ratioW;
+        let actualX: number = this.cropperSettings.initialX * ratioW;
+        let actualY: number = this.cropperSettings.initialY * ratioH;
 
         if (this.keepAspect) {
             let modifiedH: number = actualW * this.aspectRatio;
             let modifiedW: number = actualH / this.aspectRatio;
 
-            if (Math.abs(actualH - modifiedH) > Math.abs(actualW - modifiedW)) {
+            if (actualH / modifiedH > actualW / modifiedW) {
                 actualH = modifiedH;
                 actualW = modifiedH / this.aspectRatio;
             } else {

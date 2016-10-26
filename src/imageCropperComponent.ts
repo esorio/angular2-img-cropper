@@ -1,4 +1,4 @@
-import {Component, Input, Renderer, ViewChild, ElementRef, Output, EventEmitter, Type} from "@angular/core";
+import {Component, Input, Renderer, ViewChild, ElementRef, Output, EventEmitter, Type, DoCheck, KeyValueDiffers, KeyValueDiffer } from "@angular/core";
 import {ImageCropper} from "./imageCropper";
 import {CropperSettings} from "./cropperSettings";
 import {Exif} from "./exif";
@@ -19,7 +19,7 @@ import {Exif} from "./exif";
     </span>
   `
 })
-export class ImageCropperComponent extends Type {
+export class ImageCropperComponent extends Type implements DoCheck {
 
     @ViewChild("cropcanvas", undefined) private cropcanvas: ElementRef;
 
@@ -35,10 +35,30 @@ export class ImageCropperComponent extends Type {
     public intervalRef: number;
 
     public renderer: Renderer;
+    private differ: KeyValueDiffer;
 
-    constructor(renderer: Renderer) {
+    constructor(renderer: Renderer, differs: KeyValueDiffers) {
         super();
         this.renderer = renderer;
+        this.differ = differs.find({}).create(null);
+    }
+
+    public ngDoCheck() {
+        let changes = this.differ.diff(this.settings);
+        let initialSettings: String[] = ["initialH", "initialW", "initialX", "initialY"];
+
+        if (changes) {
+            changes.forEachChangedItem((setting: any) => {
+                if (initialSettings.indexOf(setting.key) !== -1 && this.cropper) {
+                    this.cropper.updateInitialCropPosition();
+                    if (this.cropper.isImageSet()) {
+                        let bounds = this.cropper.getCropBounds();
+                        this.image.image = this.cropper.getCroppedImage().src;
+                        this.onCrop.emit(bounds);
+                    }
+                }
+            });
+        }
     }
 
     public ngAfterViewInit() {

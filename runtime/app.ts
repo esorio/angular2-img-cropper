@@ -98,6 +98,14 @@ this.cropperSettings2.noFileInput = true;
         <div class="col-md-9">
             <h3>source</h3>
             <img-cropper #cropper [image]="data3" [settings]="cropperSettings3"></img-cropper>
+        <br/>
+        Initial crop position:
+        <br/>
+        X <input type="text" [(ngModel)]="cropperSettings3.initialX">
+        Y <input type="text" [(ngModel)]="cropperSettings3.initialY">
+        W <input type="text" [(ngModel)]="cropperSettings3.initialW">
+        H <input type="text" [(ngModel)]="cropperSettings3.initialH">
+
         </div>
         <h3>result</h3>
         <div class="col-md-3">
@@ -227,7 +235,6 @@ export class AppComponent extends Type {
         this.cropperSettings3.cropperDrawSettings.strokeWidth = 2;
         this.cropperSettings3.noFileInput = false;
 
-
         this.cropperSettings3.initialX = 75;
         this.cropperSettings3.initialY = 75;
         this.cropperSettings3.initialW = 200;
@@ -238,7 +245,7 @@ export class AppComponent extends Type {
     }
 
     public cropped(bounds:Bounds) {
-        console.log(this);
+        // console.log(this);
         //console.log(bounds);
     }
 

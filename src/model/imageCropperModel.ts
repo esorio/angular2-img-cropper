@@ -42,8 +42,4 @@ export class ImageCropperModel {
     protected cropWidth: number;
     protected cropHeight: number;
     protected croppedImage: HTMLImageElement;
-    protected initialX: number;
-    protected initialY: number;
-    protected initialW: number;
-    protected initialH: number;
 }
