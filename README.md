@@ -1,5 +1,16 @@
 # Changelog
 
+### Release 0.7.1
+ - Fixed #87 get unsacled crop of image
+ 
+
+### Release 0.7.0
+ - update for AngularJS 2.0.1
+ - removed typings
+ - fixed aspect ratio issue
+ - made cropper property public
+ - added onmouseleave behavior
+
 ### Release 0.6.1
  - Fixed issue #49 - Error on reading exif
 
@@ -112,8 +123,8 @@ Checkout this [sample plunker](https://embed.plnkr.co/VFwGvAO6MhV06IDTLk5W/)
     * **strokeWidth**:*number* - box/ellipsis stroke width
     * **strokeColor**:*string* - box/ellipsis stroke color
 * **allowedFilesRegex**:*RegExp* - (default: /\.(jpe?g|png|gif)$/i) - Regex for allowed images
-* **cropWidth**:*number - actual cropped image width
-* **cropHeight**:*number - actual cropped image height
+* **preserveSize**:*boolean - will not scale the resulting image to the croppedWidth/croppedHeight and will output the exact crop size from original
+
 
 ## Customizing Image cropper
 

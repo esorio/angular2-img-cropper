@@ -88,12 +88,9 @@ export class ImageCropperComponent extends Type implements DoCheck {
 
     public onTouchEnd(event: TouchEvent): void {
         this.cropper.onTouchEnd(event);
-        if (this.cropper.isImageSet()) {
-            let bounds = this.cropper.getCropBounds();
+        if (this.cropper.isImageSet() && this.cropper.isMouseDown) {
             this.image.image = this.cropper.getCroppedImage().src;
-            this.settings.cropWidth = bounds.right - bounds.left;
-            this.settings.cropHeight = bounds.bottom - bounds.top;
-            this.onCrop.emit(bounds);
+            this.onCrop.emit(this.cropper.getCropBounds());
         }
     }
 
@@ -103,12 +100,9 @@ export class ImageCropperComponent extends Type implements DoCheck {
 
     public onMouseUp(): void {
         if (this.cropper.isImageSet()) {
-            let bounds = this.cropper.getCropBounds();
             this.cropper.onMouseUp();
             this.image.image = this.cropper.getCroppedImage().src;
-            this.settings.cropWidth = bounds.right - bounds.left;
-            this.settings.cropHeight = bounds.bottom - bounds.top;
-            this.onCrop.emit(bounds);
+            this.onCrop.emit(this.cropper.getCropBounds());
         }
     }
 
@@ -150,8 +144,6 @@ export class ImageCropperComponent extends Type implements DoCheck {
                     self.image.original = img;
                     let bounds = self.cropper.getCropBounds();
                     self.image.image = self.cropper.getCroppedImage().src;
-                    self.settings.cropWidth = bounds.right - bounds.left;
-                    self.settings.cropHeight = bounds.bottom - bounds.top;
                     self.onCrop.emit(bounds);
                 });
             }
