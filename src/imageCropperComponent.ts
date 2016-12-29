@@ -1,27 +1,29 @@
-import {Component, Input, Renderer, ViewChild, ElementRef, Output, EventEmitter, Type, DoCheck, KeyValueDiffers, KeyValueDiffer } from "@angular/core";
+import {Component, Input, Renderer, ViewChild, ElementRef, Output, EventEmitter, Type, AfterViewInit} from "@angular/core";
 import {ImageCropper} from "./imageCropper";
 import {CropperSettings} from "./cropperSettings";
 import {Exif} from "./exif";
 
 @Component({
-    selector: "img-cropper", template: `
-    <span class="ng2-imgcrop">
-      <input *ngIf="!settings.noFileInput" type="file" (change)="fileChangeListener($event)" >
-      <canvas #cropcanvas
-              (mousedown)="onMouseDown($event)"
-              (mouseup)="onMouseUp($event)"
-              (mousemove)="onMouseMove($event)"
-              (mouseleave)="onMouseUp($event)"
-              (touchmove)="onTouchMove($event)"
-              (touchend)="onTouchEnd($event)"
-              (touchstart)="onTouchStart($event)">
-      </canvas>
-    </span>
-  `
+    selector: "img-cropper",
+    template: `
+        <span class="ng2-imgcrop">
+          <input *ngIf="!settings.noFileInput" type="file" (change)="fileChangeListener($event)" >
+          <canvas #cropcanvas
+                  (mousedown)="onMouseDown($event)"
+                  (mouseup)="onMouseUp($event)"
+                  (mousemove)="onMouseMove($event)"
+                  (mouseleave)="onMouseUp($event)"
+                  (touchmove)="onTouchMove($event)"
+                  (touchend)="onTouchEnd($event)"
+                  (touchstart)="onTouchStart($event)">
+          </canvas>
+        </span>
+      `
 })
-export class ImageCropperComponent extends Type implements DoCheck {
+export class ImageCropperComponent implements AfterViewInit {
 
-    @ViewChild("cropcanvas", undefined) public cropcanvas: ElementRef;
+    @ViewChild("cropcanvas", undefined)
+    private cropcanvas: ElementRef;
 
     @Input() public settings: CropperSettings;
     @Input() public image: any;
@@ -37,31 +39,35 @@ export class ImageCropperComponent extends Type implements DoCheck {
     public renderer: Renderer;
     private differ: KeyValueDiffer;
 
-    constructor(renderer: Renderer, differs: KeyValueDiffers) {
-        super();
+    // constructor(renderer: Renderer, differs: KeyValueDiffers) {
+    //     super();
+    //     this.renderer = renderer;
+    //     this.differ = differs.find({}).create(null);
+    // }
+
+    constructor(renderer: Renderer) {
         this.renderer = renderer;
-        this.differ = differs.find({}).create(null);
     }
 
-    public ngDoCheck() {
-        let changes = this.differ.diff(this.settings);
-        let initialSettings: String[] = ["initialH", "initialW", "initialX", "initialY"];
+    // public ngDoCheck(): void {
+    //     let changes = this.differ.diff(this.settings);
+    //     let initialSettings: String[] = ["initialH", "initialW", "initialX", "initialY"];
 
-        if (changes) {
-            changes.forEachChangedItem((setting: any) => {
-                if (initialSettings.indexOf(setting.key) !== -1 && this.cropper) {
-                    this.cropper.updateInitialCropPosition();
-                    if (this.cropper.isImageSet()) {
-                        let bounds = this.cropper.getCropBounds();
-                        this.image.image = this.cropper.getCroppedImage().src;
-                        this.onCrop.emit(bounds);
-                    }
-                }
-            });
-        }
-    }
+    //     if (changes) {
+    //         changes.forEachChangedItem((setting: any) => {
+    //             if (initialSettings.indexOf(setting.key) !== -1 && this.cropper) {
+    //                 this.cropper.updateInitialCropPosition();
+    //                 if (this.cropper.isImageSet()) {
+    //                     let bounds = this.cropper.getCropBounds();
+    //                     this.image.image = this.cropper.getCroppedImage().src;
+    //                     this.onCrop.emit(bounds);
+    //                 }
+    //             }
+    //         });
+    //     }
+    // }
 
-    public ngAfterViewInit() {
+    ngAfterViewInit():void {
         let canvas: HTMLCanvasElement = this.cropcanvas.nativeElement;
 
         if (!this.settings) {
@@ -77,7 +83,7 @@ export class ImageCropperComponent extends Type implements DoCheck {
 
         this.cropper.prepare(canvas);
     }
-
+    
     public onTouchMove(event: TouchEvent): void {
         this.cropper.onTouchMove(event);
     }
@@ -129,9 +135,9 @@ export class ImageCropperComponent extends Type implements DoCheck {
     public setImage(image: HTMLImageElement) {
         let self = this;
 
-        this.intervalRef = window.setInterval(function () {
-            if (this.intervalRef) {
-                clearInterval(this.intervalRef);
+        this.intervalRef = window.setInterval(function() {
+            if (self.intervalRef) {
+                clearInterval(self.intervalRef);
             }
             if (image.naturalHeight > 0) {
 
@@ -139,7 +145,7 @@ export class ImageCropperComponent extends Type implements DoCheck {
                 image.width = image.naturalWidth;
 
                 clearInterval(self.intervalRef);
-                self.getOrientedImage(image, function (img: HTMLImageElement) {
+                self.getOrientedImage(image, (img: HTMLImageElement) => {
                     self.cropper.setImage(img);
                     self.image.original = img;
                     let bounds = self.cropper.getCropBounds();

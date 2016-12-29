@@ -10,7 +10,7 @@ import { AppComponent } from './app';
 import {TabsModule} from "ng2-tabs";
 
 @NgModule({
-    imports: [ BrowserModule, FormsModule, TabsModule ],
+    imports: [ BrowserModule, TabsModule, FormsModule ],
     declarations: [
         AppComponent, ImageCropperComponent
     ],
